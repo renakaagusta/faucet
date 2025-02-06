@@ -3,13 +3,6 @@
 import ERC20ABI from "@/abis/tokens/ERC20ABI";
 import { Button } from "@/components/button/button";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/dialog/dialog";
-import {
   Form,
   FormControl,
   FormField,
@@ -25,6 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/select/select";
+import SuccessDialog from "@/components/success-dialog/success-dialog";
 import { DataTable } from "@/components/table/data-table";
 import { requestTokenColumns } from "@/components/table/faucet/request-token/columns";
 import ClientWrapper from "@/components/wrapper/client-wrapper";
@@ -32,9 +26,7 @@ import { wagmiConfig } from "@/configs/wagmi";
 import { FAUCET_ADDRESS } from "@/constants/contract-address";
 import { FAUCET_INDEXER_URL } from "@/constants/subgraph-url";
 import { queryAddTokens, queryRequestTokens } from "@/graphql/faucet/faucet.query";
-import { useFaucetCooldown } from "@/hooks/web3/faucet/useFaucetCooldown";
-import { useLastRequestTime } from "@/hooks/web3/faucet/useLastRequestTime";
-import { useRequestToken } from "@/hooks/web3/faucet/useRequestToken";
+import { useDepositToken } from "@/hooks/web3/faucet/useDepositToken";
 import { useBalance } from "@/hooks/web3/token/useBalance";
 import { AddTokensData } from "@/types/web3/faucet/add-token";
 import { RequestTokensData } from "@/types/web3/faucet/request-token";
@@ -46,12 +38,11 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useQuery } from "@tanstack/react-query";
 import { readContract } from "@wagmi/core";
 import { request } from 'graphql-request';
-import { Calendar, Clock, History, Wallet } from "lucide-react";
-import { DateTime } from 'luxon';
+import { History, Wallet } from "lucide-react";
 import type { NextPage } from "next";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { formatUnits } from "viem";
+import { formatUnits, parseUnits } from "viem";
 import {
   useAccount
 } from "wagmi";
@@ -59,6 +50,7 @@ import * as z from "zod";
 
 const faucetSchema = z.object({
   token: z.string().min(1),
+  amount: z.string().min(1),
 });
 
 const Home: NextPage = () => {
@@ -77,13 +69,14 @@ const Home: NextPage = () => {
 
   const { balance: userBalance, error: userBalanceError } = useBalance(userAddress as HexAddress, selectedTokenAddress as HexAddress);
   const { balance: faucetBalance, error: faucetBalanceError } = useBalance(FAUCET_ADDRESS as HexAddress, selectedTokenAddress as HexAddress);
-  const { lastRequestTime, error: lastRequestTimeError } = useLastRequestTime(userAddress as HexAddress, FAUCET_ADDRESS as HexAddress);
-  const { faucetCooldown, error: faucetCooldownError } = useFaucetCooldown(FAUCET_ADDRESS as HexAddress);
 
   const {
-    isAlertOpen: isAlertRequestTokenOpen,
-    handleRequestToken
-  } = useRequestToken();
+    handleApprovalDeposit,
+    isDepositConfirming,
+    depositHash,
+    isDepositAlertOpen,
+    setIsDepositAlertOpen,
+  } = useDepositToken();
 
   const { data: addTokensData, isLoading: addTokensIsLoading, refetch: addTokensRefetch } = useQuery<AddTokensData>({
     queryKey: ['addTokensData'],
@@ -111,7 +104,7 @@ const Home: NextPage = () => {
 
 
   const onSubmit = async (values: z.infer<typeof faucetSchema>) => {
-    handleRequestToken(userAddress as HexAddress, selectedTokenAddress as HexAddress);
+    handleApprovalDeposit(selectedTokenAddress as HexAddress, BigInt(parseUnits(values.amount.toString(), 18)));
   };
 
   useEffect(() => {
@@ -166,21 +159,19 @@ const Home: NextPage = () => {
 
   return (
     <main>
-      <Dialog open={isAlertRequestTokenOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Success</DialogTitle>
-            <DialogDescription>Request token has been executed successfully</DialogDescription>
-          </DialogHeader>
-        </DialogContent>
-      </Dialog>
+      <SuccessDialog
+        open={isDepositAlertOpen}
+        onOpenChange={setIsDepositAlertOpen}
+        txHash={depositHash}
+        isLoading={isDepositConfirming}
+      />
       <ClientWrapper>
         <div>
           {isConnected && (
             <div className="mt-[5rem] rounded-lg p-4 flex flex-col justify-between w-full lg:w-[70vw]">
-              <h1 className="text-4xl font-bold">Faucet</h1>
+              <h1 className="text-4xl font-bold">Deposit</h1>
               <p className="text-lg text-gray-500 mt-2">
-                Faucet for multiple tokens
+                Deposit tokens to our faucet
               </p>
               <Form {...form}>
                 <form
@@ -217,16 +208,30 @@ const Home: NextPage = () => {
                       </FormItem>
                     )}
                   />
+                  <FormField
+                    control={form.control}
+                    name="amount"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Amount</FormLabel>
+                        <FormControl>
+                          <input
+                            type="number"
+                            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                            placeholder="Enter amount to deposit"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                   <div className="flex flex-row gap-4">
                     <div className="flex flex-row gap-2 bg-gray-600 bg-opacity-50 p-3 rounded-xl"><Wallet /> <Label className="text-md">Faucet balance: {faucetBalance ? `${formatUnits(BigInt(faucetBalance), 18)} ${availableTokens[selectedTokenAddress]?.symbol}` : '-'}</Label></div>
                     <div className="flex flex-row gap-2 bg-gray-600 bg-opacity-50 p-3 rounded-xl"><Wallet /> <Label className="text-md">Your balance: {userBalance ? `${formatUnits(BigInt(userBalance), 18)} ${availableTokens[selectedTokenAddress]?.symbol}` : '-'}</Label></div>
                   </div>
-                  <div className="flex flex-row gap-4">
-                    <div className="flex flex-row gap-2 bg-gray-600 bg-opacity-50 p-3 rounded-xl"><Calendar /> <Label className="text-md">Last request time: {lastRequestTime ? `${DateTime.fromMillis(Number(lastRequestTime) * 1000).toFormat('HH:mm d LLLL yyyy')}` : '-'}</Label></div>
-                    <div className="flex flex-row gap-2 bg-gray-600 bg-opacity-50 p-3 rounded-xl"><Clock /> <Label className="text-md">Cooldown: {faucetCooldown ? `${faucetCooldown}s` : '-'}</Label></div>
-                  </div>
                   <Button variant="default" type="submit">
-                    Send Request
+                    Deposit
                   </Button>
                 </form>
               </Form>
@@ -239,7 +244,7 @@ const Home: NextPage = () => {
                       : []
                   }
                   columns={requestTokenColumns()}
-                  handleRefresh={() => {}}
+                  handleRefresh={() => { }}
                   isLoading={requestTokensIsLoading}
                 />
               </div>

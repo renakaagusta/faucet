@@ -13,6 +13,7 @@ import type { AppProps } from "next/app";
 import { WagmiProvider } from "wagmi";
 import { arbitrumSepolia } from "wagmi/chains";
 import "../styles/globals.css";
+import { Toaster } from "@/components/toaster/toaster";
 
 const queryClient = new QueryClient();
 
@@ -35,6 +36,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           >
             <Header />
             <Component {...pageProps} />
+            <Toaster />
             <Footer />
           </ThemeProvider>
         </RainbowKitProvider>

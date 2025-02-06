@@ -37,6 +37,10 @@ const Header = () => {
       destination: "/faucet",
       label: "Faucet",
     },
+    {
+      destination: "/deposit",
+      label: "Deposit",
+    },
   ];
 
   const changeTheme = () => {
