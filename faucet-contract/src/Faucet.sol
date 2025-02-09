@@ -22,7 +22,7 @@ contract Faucet {
     }
 
     function addToken(address _token) public {
-        require(msg.sender == owner, "Only owner can invoke this method");
+        // require(msg.sender == owner, "Only owner can invoke this method");
 
         for (uint256 i = 0; i < availableTokens.length; i++) {
             if (_token == availableTokens[i]) {
@@ -103,4 +103,6 @@ contract Faucet {
 
         emit DepositToken(msg.sender, _token, _amount);
     }
+
+
 }

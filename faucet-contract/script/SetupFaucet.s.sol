@@ -2,16 +2,19 @@
 import {Script, console} from "forge-std/Script.sol";
 import {Faucet} from "../src/Faucet.sol";
 
-contract SetupScript is Script {
+contract SetupFaucetScript is Script {
+    address public faucetAddress;
+
+    function setUp() public {
+        faucetAddress = vm.envAddress("FAUCET_ADDRESS");
+    }
+
+    function setFaucetAddress(address _faucetAddress) public {
+        faucetAddress = _faucetAddress;
+    }
+
     function run() public {      
-        string memory rpcUrl = vm.envString("RPC_URL");
-        string memory privateKey = vm.envString("PRIVATE_KEY");
-        
-        vm.createSelectFork(rpcUrl);
-
         vm.startBroadcast();
-
-        address faucetAddress = vm.envAddress("FAUCET_ADDRESS");
 
         Faucet faucet = Faucet(faucetAddress);
 

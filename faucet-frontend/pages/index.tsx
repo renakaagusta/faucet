@@ -166,14 +166,14 @@ const Home: NextPage = () => {
 
   return (
     <main>
-      <Dialog open={isAlertRequestTokenOpen}>
+      {/* <Dialog open={isAlertRequestTokenOpen}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Success</DialogTitle>
             <DialogDescription>Request token has been executed successfully</DialogDescription>
           </DialogHeader>
         </DialogContent>
-      </Dialog>
+      </Dialog> */}
       <ClientWrapper>
         <div>
           {isConnected && (

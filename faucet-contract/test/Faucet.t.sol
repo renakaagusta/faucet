@@ -5,18 +5,19 @@ import "lib/openzeppelin-contracts/contracts/token/ERC20/ERC20.sol";
 
 import {Test, console} from "forge-std/Test.sol";
 import {Faucet} from "../src/Faucet.sol";
-import {MockIDR} from "../mocks/MockIDR.sol";
-import {MockUSD} from "../mocks/MockUSD.sol";
+import {IDRT} from "../src/IDRT.sol";
+import {USDT} from "../src/USDT.sol";
 
 contract FaucetTest is Test {
     Faucet public faucet;
-    MockIDR public mockIDR;
-    MockUSD public mockUSD;
+    IDRT public idrt;
+    USDT public usdt;
 
     event AddToken(address token);
     event UpdateFaucetAmount(uint256 amount);
     event UpdateFaucetCooldown(uint256 cooldown);
     event RequestToken(address requester, address receiver, address token);
+    event DepositToken(address depositor, address token, uint256 amount);
 
     address anotherAddress;
 
@@ -25,8 +26,8 @@ contract FaucetTest is Test {
         faucet.updateFaucetAmount(1000);
         faucet.updateFaucetCooldown(60);
 
-        mockIDR = new MockIDR("MockIDR", "MIDR");
-        mockUSD = new MockUSD("MockUSD", "MUSD  ");
+        idrt = new IDRT("MockIDR", "MIDR");
+        usdt = new USDT("MockUSD", "MUSD");
 
         anotherAddress = vm.addr(2);
     }
@@ -34,14 +35,14 @@ contract FaucetTest is Test {
     function testOwnerCanAddToken() public {
         vm.expectEmit(false, false, false, true);
 
-        emit AddToken(address(mockIDR));
+        emit AddToken(address(idrt));
 
-        faucet.addToken(address(mockIDR));
+        faucet.addToken(address(idrt));
 
         bool isExist = false;
 
         for(uint256 i = 0; i < faucet.getAvailableTokensLength(); i++) {
-            if (faucet.availableTokens(i) == address(mockIDR)) {
+            if (faucet.availableTokens(i) == address(idrt)) {
                 isExist = true;
             }
         }
@@ -53,12 +54,12 @@ contract FaucetTest is Test {
         vm.prank(anotherAddress);
         vm.expectRevert(bytes( "Only owner can invoke this method"));
 
-        faucet.addToken(address(mockIDR));
+        faucet.addToken(address(idrt));
 
         bool isExist = false;
 
         for(uint256 i = 0; i < faucet.getAvailableTokensLength(); i++) {
-            if (faucet.availableTokens(i) == address(mockIDR)) {
+            if (faucet.availableTokens(i) == address(idrt)) {
                 isExist = true;
             }
         }

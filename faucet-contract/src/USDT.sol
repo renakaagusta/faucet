@@ -8,8 +8,10 @@ contract USDT is ERC20 {
 
     event Mint(address receiver, uint256 amount);
 
-    constructor() ERC20("USDT", "USDT") {
+    constructor(string memory _name, string memory _symbol) ERC20(_name, _symbol) {
         owner = msg.sender;
+        // name = _name;
+        // symbol = _symbol;
     }
 
     function mint(address receiver, uint256 amount) public {

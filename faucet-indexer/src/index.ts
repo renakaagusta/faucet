@@ -26,3 +26,17 @@ ponder.on("Faucet:RequestToken", async ({ event, context }) => {
     transactionHash: event.transaction.hash,
   });
 });
+
+
+ponder.on("Faucet:DepositToken", async ({ event, context }) => {
+  // Create request record
+  await context.db.insert(requestToken).values({
+    id: `${event.block.number}-${event.transaction.hash}`,
+    depositor: event.args.depositor,
+    token: event.args.token,
+    amount: event.args.amount,
+    timestamp: Number(event.block.timestamp),
+    blockNumber: Number(event.block.number),
+    transactionHash: event.transaction.hash,
+  });
+});

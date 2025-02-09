@@ -19,10 +19,14 @@ export default createConfig({
       chainId: 421614,
       transport: http(process.env.PONDER_RPC_URL_3),
     },
+    conduit: {
+      chainId: 911867,
+      transport: http(process.env.PONDER_RPC_URL_4),
+    },
   },
   contracts: {
     Faucet: {
-      network: "anvil",
+      network: "conduit",
       abi: FaucetABI,
       address: process.env.FAUCET_ADDRESS as `0x${string}`,
       startBlock: process.env.FAUCET_BLOCK as unknown as number,

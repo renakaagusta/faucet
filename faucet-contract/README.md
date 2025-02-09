@@ -12,7 +12,14 @@ forge script script/DeploymentToken.s.sol --rpc-url $RPC_URL --private-key $PRIV
 
 forge script script/AddToken.s.sol --rpc-url $RPC_URL --private-key $PRIVATE_KEY --broadcast
 
-## 4. Setup Faucet
+## 4. Deposit Token to Faucet
+
+forge script script/DepositToken.s.sol --rpc-url $RPC_URL --private-key $PRIVATE_KEY --broadcast
+
+## 5. Setup Faucet
 
 forge script script/SetupFaucet.s.sol --rpc-url $RPC_URL --private-key $PRIVATE_KEY --broadcast
 
+Or if you want to do it in a concise way, you can use this command:
+
+forge script script/SetupAll.s.sol --rpc-url $RPC_URL --private-key $PRIVATE_KEY --broadcast

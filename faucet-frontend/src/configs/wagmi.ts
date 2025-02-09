@@ -29,12 +29,36 @@ const localChain: Chain = {
   testnet: true,
 };
 
+const conduitChain: Chain = {
+  id: 911867,
+  name: "Conduit",
+  nativeCurrency: {
+    decimals: 18,
+    name: "Conduit Ether",
+    symbol: "ETH",
+  },
+  rpcUrls: {
+    default: {
+      http: ["https://odyssey.ithaca.xyz"],
+    },
+    public: {
+      http: ["https://odyssey.ithaca.xyz"],
+    },
+  },
+  blockExplorers: {
+    default: {
+      name: "Conduit Explorer",
+      url: "https://odyssey-explorer.ithaca.xyz",
+    },
+  },
+  testnet: true,
+};
 
 
 export const wagmiConfig = getDefaultConfig({
   appName: 'RainbowKit',
   projectId: 'c8d08053460bfe0752116d730dc6393b',
   chains: [
-    localChain
+    conduitChain,
   ],
 });

@@ -7,17 +7,30 @@ import {IDRT} from "../src/IDRT.sol";
 import {USDT} from "../src/USDT.sol";
 
 contract DepositTokenScript is Script {
+    address public faucetAddress;
+    address public idrtAddress;
+    address public usdtAddress;
+
+    function setUp() public {
+        faucetAddress = vm.envAddress("FAUCET_ADDRESS");
+        idrtAddress = vm.envAddress("IDRT_ADDRESS");
+        usdtAddress = vm.envAddress("USDT_ADDRESS");
+    }
+
+        function setFaucetAddress(address _faucetAddress) public {
+        faucetAddress = _faucetAddress;
+    }
+
+    function setIdrtAddress(address _idrtAddress) public {
+        idrtAddress = _idrtAddress;
+    }
+
+    function setUsdtAddress(address _usdtAddress) public {
+        usdtAddress = _usdtAddress;
+    }
+
     function run() public {      
-        string memory rpcUrl = vm.envString("RPC_URL");
-        string memory privateKey = vm.envString("PRIVATE_KEY");
-        
-        vm.createSelectFork(rpcUrl);
-
         vm.startBroadcast(vm.envUint("PRIVATE_KEY"));
-
-        address faucetAddress = vm.envAddress("FAUCET_ADDRESS");
-        address idrtAddress = vm.envAddress("IDRT_ADDRESS");
-        address usdtAddress = vm.envAddress("USDT_ADDRESS");
 
         Faucet faucet = Faucet(faucetAddress);
         IDRT idrt = IDRT(idrtAddress);

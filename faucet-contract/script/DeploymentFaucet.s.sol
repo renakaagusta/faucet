@@ -5,19 +5,16 @@ import {Script, console} from "forge-std/Script.sol";
 import {Faucet} from "../src/Faucet.sol";
 
 contract DeploymentFaucetScript is Script {
-    Faucet public faucet;
-
-    function setUp() public {
-    }
+    address public faucetAddress;
 
     function run() public {     
-        address deployer = vm.rememberKey(vm.envUint("PRIVATE_KEY"));
-
         vm.startBroadcast();
         
-        faucet = new Faucet();
+        Faucet faucetContract = new Faucet();
 
-        console.log("Deployed Faucet at:", address(faucet));
+        console.log("Deployed Faucet at:", address(faucetContract));
+
+        faucetAddress = address(faucetContract);
 
         vm.stopBroadcast();
     }
