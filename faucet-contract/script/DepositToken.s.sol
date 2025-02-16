@@ -3,51 +3,50 @@ pragma solidity ^0.8.13;
 
 import {Script, console} from "forge-std/Script.sol";
 import {Faucet} from "../src/Faucet.sol";
-import {IDRT} from "../src/IDRT.sol";
-import {USDT} from "../src/USDT.sol";
+import {Token} from "../src/Token.sol";
 
 contract DepositTokenScript is Script {
     address public faucetAddress;
-    address public idrtAddress;
-    address public usdtAddress;
+    address public wethAddress;
+    address public usdcAddress;
 
     function setUp() public {
         faucetAddress = vm.envAddress("FAUCET_ADDRESS");
-        idrtAddress = vm.envAddress("IDRT_ADDRESS");
-        usdtAddress = vm.envAddress("USDT_ADDRESS");
+        wethAddress = vm.envAddress("WETH_ADDRESS");
+        usdcAddress = vm.envAddress("USDC_ADDRESS");
     }
 
-        function setFaucetAddress(address _faucetAddress) public {
+    function setFaucetAddress(address _faucetAddress) public {
         faucetAddress = _faucetAddress;
     }
 
-    function setIdrtAddress(address _idrtAddress) public {
-        idrtAddress = _idrtAddress;
+    function setWETHAddress(address _wethAddress) public {
+        wethAddress = _wethAddress;
     }
 
-    function setUsdtAddress(address _usdtAddress) public {
-        usdtAddress = _usdtAddress;
+    function setUSDCAddress(address _usdcAddress) public {
+        usdcAddress = _usdcAddress;
     }
 
     function run() public {      
         vm.startBroadcast(vm.envUint("PRIVATE_KEY"));
 
         Faucet faucet = Faucet(faucetAddress);
-        IDRT idrt = IDRT(idrtAddress);
-        USDT usdt = USDT(usdtAddress);
+        Token weth = Token(wethAddress);
+        Token usdc = Token(usdcAddress);
         
-        uint256 depositAmount = 1000 * 10**18;
+        uint256 depositAmount = 1 * 10**24;
         
-        idrt.mint(msg.sender, depositAmount);
-        usdt.mint(msg.sender, depositAmount);
+        weth.mint(msg.sender, depositAmount);
+        usdc.mint(msg.sender, depositAmount);
 
-        idrt.approve(faucetAddress, depositAmount);
-        usdt.approve(faucetAddress, depositAmount);
+        weth.approve(faucetAddress, depositAmount);
+        usdc.approve(faucetAddress, depositAmount);
 
-        faucet.depositToken(idrtAddress, depositAmount);
-        faucet.depositToken(usdtAddress, depositAmount);
+        faucet.depositToken(wethAddress, depositAmount);
+        faucet.depositToken(usdcAddress, depositAmount);
 
-        console.log("Deposited", depositAmount, "IDRT and USDT to faucet at", faucetAddress);
+        console.log("Deposited", depositAmount, "WETH and USDC to faucet at", faucetAddress);
 
         vm.stopBroadcast();
     }

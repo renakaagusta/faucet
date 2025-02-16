@@ -5,13 +5,12 @@ import "lib/openzeppelin-contracts/contracts/token/ERC20/ERC20.sol";
 
 import {Test, console} from "forge-std/Test.sol";
 import {Faucet} from "../src/Faucet.sol";
-import {IDRT} from "../src/IDRT.sol";
-import {USDT} from "../src/USDT.sol";
+import {Token} from "../src/Token.sol";
 
 contract FaucetTest is Test {
     Faucet public faucet;
-    IDRT public idrt;
-    USDT public usdt;
+    Token public weth;
+    Token public usdc;
 
     event AddToken(address token);
     event UpdateFaucetAmount(uint256 amount);
@@ -23,11 +22,11 @@ contract FaucetTest is Test {
 
     function setUp() public {
         faucet = new Faucet();
-        faucet.updateFaucetAmount(1000);
+        faucet.updateFaucetAmount(1 * 10 ** 18);
         faucet.updateFaucetCooldown(60);
 
-        idrt = new IDRT("MockIDR", "MIDR");
-        usdt = new USDT("MockUSD", "MUSD");
+        weth = new Token("WETH", "WETH");
+        usdc = new Token("USDC", "USDC");
 
         anotherAddress = vm.addr(2);
     }
@@ -35,14 +34,14 @@ contract FaucetTest is Test {
     function testOwnerCanAddToken() public {
         vm.expectEmit(false, false, false, true);
 
-        emit AddToken(address(idrt));
+        emit AddToken(address(weth));
 
-        faucet.addToken(address(idrt));
+        faucet.addToken(address(weth));
 
         bool isExist = false;
 
         for(uint256 i = 0; i < faucet.getAvailableTokensLength(); i++) {
-            if (faucet.availableTokens(i) == address(idrt)) {
+            if (faucet.availableTokens(i) == address(weth)) {
                 isExist = true;
             }
         }
@@ -54,12 +53,12 @@ contract FaucetTest is Test {
         vm.prank(anotherAddress);
         vm.expectRevert(bytes( "Only owner can invoke this method"));
 
-        faucet.addToken(address(idrt));
+        faucet.addToken(address(weth));
 
         bool isExist = false;
 
         for(uint256 i = 0; i < faucet.getAvailableTokensLength(); i++) {
-            if (faucet.availableTokens(i) == address(idrt)) {
+            if (faucet.availableTokens(i) == address(weth)) {
                 isExist = true;
             }
         }

@@ -2,15 +2,11 @@ import faucetABI from '@/abis/faucet/FaucetABI';
 import { wagmiConfig } from '@/configs/wagmi';
 import { FAUCET_ADDRESS } from '@/constants/contract-address';
 import { HexAddress } from '@/types/web3/general/address';
-import { readContract, signMessage, simulateContract, writeContract } from '@wagmi/core';
+import { simulateContract } from '@wagmi/core';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { encodeFunctionData, keccak256, parseUnits, toRlp } from 'viem';
-import { useWaitForTransactionReceipt, useWriteContract } from 'wagmi';
-import { getWalletClient, getAccount } from '@wagmi/core';
-import { parseGwei } from 'viem';
-import { usePublicClient } from 'wagmi';
-import { useWalletClient } from 'wagmi';
+import { encodeFunctionData } from 'viem';
+import { usePublicClient, useWaitForTransactionReceipt, useWalletClient, useWriteContract } from 'wagmi';
 
 export const useRequestToken = (
 ) => {
@@ -63,13 +59,13 @@ export const useRequestToken = (
             // Debug the transaction first using debug_traceCall
             // Since we can't use debug_traceCall, we'll rely on simulateContract 
             // which provides more detailed error information if the call fails
-            // const simulation = await simulateContract(wagmiConfig, {
-            //     abi: faucetABI,
-            //     address: FAUCET_ADDRESS as HexAddress,
-            //     functionName: 'requestToken',
-            //     args: [receiverAddress, tokenAddress],
-            //     account: receiverAddress // Simulate from the receiver's address
-            // });
+            const simulation = await simulateContract(wagmiConfig, {
+                abi: faucetABI,
+                address: FAUCET_ADDRESS as HexAddress,
+                functionName: 'requestToken',
+                args: [receiverAddress, tokenAddress],
+                account: receiverAddress // Simulate from the receiver's address
+            });
 
             // console.log('Simulation details:', {
             //     result: simulation.result,

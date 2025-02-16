@@ -1,4 +1,4 @@
-import ERC20ABI from "@/abis/tokens/IDRTABI";
+import ERC20ABI from "@/abis/tokens/TokenABI";
 import { wagmiConfig } from "@/configs/wagmi";
 import { HexAddress } from "@/types/web3/general/address";
 import { readContract } from "@wagmi/core";

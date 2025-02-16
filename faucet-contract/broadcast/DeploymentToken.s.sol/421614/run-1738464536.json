@@ -3,7 +3,7 @@
     {
       "hash": "0x0fc90eb5291b97e4fa7da1250316a20a185ed800f8ecd42e2887b9be97592130",
       "transactionType": "CREATE",
-      "contractName": "IDRT",
+      "contractName": "WETH",
       "contractAddress": "0x7234611bb672ddf10408a73e4de62ef939b38245",
       "function": null,
       "arguments": null,
@@ -21,7 +21,7 @@
     {
       "hash": "0x6a4b6c809a7c4012a609554fe02820601ad49b8043a30532c151a7623fc71fcd",
       "transactionType": "CREATE",
-      "contractName": "USDT",
+      "contractName": "USDC",
       "contractAddress": "0x7ad9331aef16b6b77904add1752145728cc014cb",
       "function": null,
       "arguments": null,

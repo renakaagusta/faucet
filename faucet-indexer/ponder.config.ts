@@ -23,10 +23,14 @@ export default createConfig({
       chainId: 911867,
       transport: http(process.env.PONDER_RPC_URL_4),
     },
+    sepolia: {
+      chainId: 11155111,
+      transport: http(process.env.PONDER_RPC_URL_5),
+    },
   },
   contracts: {
     Faucet: {
-      network: "conduit",
+      network: "arbitrumSepolia",
       abi: FaucetABI,
       address: process.env.FAUCET_ADDRESS as `0x${string}`,
       startBlock: process.env.FAUCET_BLOCK as unknown as number,

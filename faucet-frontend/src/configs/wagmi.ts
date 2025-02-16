@@ -1,7 +1,9 @@
 import { getDefaultConfig } from '@rainbow-me/rainbowkit';
 import { http } from 'viem';
 import {
-  Chain
+  arbitrumSepolia,
+  Chain,
+  sepolia
 } from 'wagmi/chains';
 
 const localChain: Chain = {
@@ -59,6 +61,16 @@ export const wagmiConfig = getDefaultConfig({
   appName: 'RainbowKit',
   projectId: 'c8d08053460bfe0752116d730dc6393b',
   chains: [
+    localChain,
     conduitChain,
+    arbitrumSepolia,
+    {
+      ...sepolia,
+      rpcUrls: {
+        default: {
+          http: ["https://sepolia.infura.io/v3/jBG4sMyhez7V13jNTeQKfVfgNa54nCmF"],
+        },
+      },
+    },
   ],
 });

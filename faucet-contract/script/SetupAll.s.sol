@@ -23,8 +23,8 @@ contract DeployAllScript is Script {
         // // Add tokens to faucet
         AddTokenScript addTokens = new AddTokenScript();
         addTokens.setFaucetAddress(deployFaucet.faucetAddress());
-        addTokens.setIdrtAddress(deployTokens.idrtAddress());
-        addTokens.setUsdtAddress(deployTokens.usdtAddress());
+        addTokens.setWETHAddress(deployTokens.wethAddress());
+        addTokens.setUSDCAddress(deployTokens.usdcAddress());
         addTokens.run();
         console.log("Tokens added to faucet");
 
@@ -37,8 +37,8 @@ contract DeployAllScript is Script {
         // Deposit initial tokens
         DepositTokenScript depositTokens = new DepositTokenScript();
         depositTokens.setFaucetAddress(deployFaucet.faucetAddress());
-        depositTokens.setIdrtAddress(deployTokens.idrtAddress());
-        depositTokens.setUsdtAddress(deployTokens.usdtAddress());
+        depositTokens.setWETHAddress(deployTokens.wethAddress());
+        depositTokens.setUSDCAddress(deployTokens.usdcAddress());
         depositTokens.run();
         console.log("Initial tokens deposited");
     }

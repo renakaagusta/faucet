@@ -2,31 +2,30 @@
 pragma solidity ^0.8.13;
 
 import {Script, console} from "forge-std/Script.sol";
-import {IDRT} from "../src/IDRT.sol";
-import {USDT} from "../src/USDT.sol";
+import {Token} from "../src/Token.sol";
 
 contract DeploymentTokenScript is Script {
-    address public idrtAddress;
-    address public usdtAddress;
+    address public wethAddress;
+    address public usdcAddress;
     
     function run() public {      
         address deployer = vm.rememberKey(vm.envUint("PRIVATE_KEY"));
 
         vm.startBroadcast();
         
-        IDRT idrt = new IDRT("IDRT", "IDRT");
+        Token weth = new Token("WETH", "WETH");
 
-        console.log("Deployed IDRT at:", address(idrt));
+        console.log("Deployed WETH at:", address(weth));
 
-        USDT usdt = new USDT("USDT", "USDT");
+        Token usdc = new Token("USDC", "USDC");
 
-        console.log("Deployed USDT at:", address(usdt));
+        console.log("Deployed USDC at:", address(usdc));
 
-        idrtAddress = address(idrt);
-        usdtAddress = address(usdt);
+        wethAddress = address(weth);
+        usdcAddress = address(usdc);
 
-        idrt.mint(deployer, 1e27);
-        usdt.mint(deployer, 1e27);
+        weth.mint(deployer, 1e27);
+        usdc.mint(deployer, 1e27);
 
         vm.stopBroadcast();
     }

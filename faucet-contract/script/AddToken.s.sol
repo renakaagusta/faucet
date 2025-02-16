@@ -1,30 +1,29 @@
 
 import {Script, console} from "forge-std/Script.sol";
 import {Faucet} from "../src/Faucet.sol";
-import {IDRT} from "../src/IDRT.sol";
-import {USDT} from "../src/USDT.sol";
+import {Token} from "../src/Token.sol";
 
 contract AddTokenScript is Script {
     address public faucetAddress;
-    address public idrtAddress;
-    address public usdtAddress;
+    address public wethAddress;
+    address public usdcAddress;
 
     function setUp() public {
         faucetAddress = vm.envAddress("FAUCET_ADDRESS");
-        idrtAddress = vm.envAddress("IDRT_ADDRESS");
-        usdtAddress = vm.envAddress("USDT_ADDRESS");
+        wethAddress = vm.envAddress("WETH_ADDRESS");
+        usdcAddress = vm.envAddress("USDC_ADDRESS");
     }
 
     function setFaucetAddress(address _faucetAddress) public {
         faucetAddress = _faucetAddress;
     }
 
-    function setIdrtAddress(address _idrtAddress) public {
-        idrtAddress = _idrtAddress;
+    function setWETHAddress(address _wethAddress) public {
+        wethAddress = _wethAddress;
     }
 
-    function setUsdtAddress(address _usdtAddress) public {
-        usdtAddress = _usdtAddress;
+    function setUSDCAddress(address _usdcAddress) public {
+        usdcAddress = _usdcAddress;
     }
 
     function run() public {      
@@ -34,24 +33,24 @@ contract AddTokenScript is Script {
         vm.startBroadcast();
 
         console.log("Faucet address:", faucetAddress);
-        console.log("IDRT address:", idrtAddress);
-        console.log("USDT address:", usdtAddress);
+        console.log("WETH address:", wethAddress);
+        console.log("USDC address:", usdcAddress);
 
         Faucet faucet = Faucet(faucetAddress);
-        IDRT idrt = IDRT(idrtAddress);
-        USDT usdt = USDT(usdtAddress);
+        Token weth = Token(wethAddress);
+        Token usdc = Token(usdcAddress);
 
         uint256 availableTokensLength = faucet.getAvailableTokensLength();
         console.log("Previous Faucet available tokens length :", availableTokensLength);
         
-        faucet.addToken(idrtAddress);
-        faucet.addToken(usdtAddress);
+        faucet.addToken(wethAddress);
+        faucet.addToken(usdcAddress);
         
         availableTokensLength = faucet.getAvailableTokensLength();
         console.log("Current Faucet available tokens length :", availableTokensLength);
 
-        idrt.mint(faucetAddress, 100e18);
-        usdt.mint(faucetAddress, 100e18);
+        weth.mint(faucetAddress, 100e18);
+        usdc.mint(faucetAddress, 100e18);
 
         vm.stopBroadcast();
     }
