@@ -1,6 +1,6 @@
 'use client';
 
-import ERC20ABI from "@/abis/tokens/ERC20ABI";
+import TokenABI from "@/abis/tokens/TokenABI";
 import { Button } from "@/components/button/button";
 import {
   Form,
@@ -122,14 +122,14 @@ const Home: NextPage = () => {
         try {
           const tokenNameResult = await readContract(wagmiConfig, {
             address: addTokenData.address,
-            abi: ERC20ABI,
+            abi: TokenABI,
             functionName: 'name',
             args: [],
           });
 
           const tokenSymbolResult = await readContract(wagmiConfig, {
             address: addTokenData.address,
-            abi: ERC20ABI,
+            abi: TokenABI,
             functionName: 'symbol',
             args: [],
           });

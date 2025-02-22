@@ -15,11 +15,11 @@ contract DeploymentTokenScript is Script {
         
         Token weth = new Token("WETH", "WETH");
 
-        console.log("Deployed WETH at:", address(weth));
+        console.log("WETH_ADDRESS=%s", address(weth));
 
         Token usdc = new Token("USDC", "USDC");
 
-        console.log("Deployed USDC at:", address(usdc));
+        console.log("USDC_ADDRESS=%s", address(usdc));
 
         wethAddress = address(weth);
         usdcAddress = address(usdc);

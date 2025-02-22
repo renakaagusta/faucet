@@ -1,5 +1,5 @@
 import faucetABI from '@/abis/faucet/FaucetABI';
-import ERC20ABI from '@/abis/tokens/ERC20ABI';
+import TokenABI from '@/abis/tokens/TokenABI';
 import { wagmiConfig } from '@/configs/wagmi';
 import { FAUCET_ADDRESS } from '@/constants/contract-address';
 import { HexAddress } from '@/types/web3/general/address';
@@ -70,7 +70,7 @@ export const useDepositToken = () => {
         try {
             const allowanceResult = await readContract(wagmiConfig, {
                 address: tokenAddress,
-                abi: ERC20ABI,
+                abi: TokenABI,
                 functionName: 'allowance',
                 args: [getAccount(wagmiConfig).address, FAUCET_ADDRESS],
             });
@@ -85,7 +85,7 @@ export const useDepositToken = () => {
                 toast.info('Requesting approval');
                 writeApproval({
                     address: tokenAddress,
-                    abi: ERC20ABI,
+                    abi: TokenABI,
                     functionName: 'approve',
                     args: [FAUCET_ADDRESS, amount],
                 });

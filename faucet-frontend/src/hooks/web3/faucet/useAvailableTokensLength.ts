@@ -1,4 +1,4 @@
-import ERC20ABI from "@/abis/tokens/TokenABI";
+import TokenABI from "@/abis/tokens/TokenABI";
 import { wagmiConfig } from "@/configs/wagmi";
 import { HexAddress } from "@/types/web3/general/address";
 import { readContract } from "@wagmi/core";
@@ -47,7 +47,7 @@ export const useAvailableTokensLength = (
         try {
             const result = await readContract(wagmiConfig, {
                 address: faucetAddress,
-                abi: ERC20ABI,
+                abi: TokenABI,
                 functionName: 'availableTokensLength',
                 args: [],
             });

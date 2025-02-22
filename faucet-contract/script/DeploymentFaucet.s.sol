@@ -12,7 +12,7 @@ contract DeploymentFaucetScript is Script {
         
         Faucet faucetContract = new Faucet();
 
-        console.log("Deployed Faucet at:", address(faucetContract));
+        console.log("FAUCET_ADDRESS=%s", address(faucetContract));
 
         faucetAddress = address(faucetContract);
 

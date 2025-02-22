@@ -56,21 +56,46 @@ const conduitChain: Chain = {
   testnet: true,
 };
 
+const riseSepolia: Chain = {
+  id: 11155931,
+  name: "Rise Sepolia",
+  nativeCurrency: {
+    decimals: 18,
+    name: "ETH",
+    symbol: "ETH",
+  },
+  rpcUrls: {
+    default: {
+      http: ["https://testnet.riselabs.xyz"],
+    },
+    public: {
+      http: ["https://testnet.riselabs.xyz"],
+    },
+  },
+  blockExplorers: {
+    default: {
+      name: "Rise Explorer",
+      url: "https://testnet-explorer.riselabs.xyz",
+    },
+  },
+  testnet: true,
+};
 
 export const wagmiConfig = getDefaultConfig({
   appName: 'RainbowKit',
   projectId: 'c8d08053460bfe0752116d730dc6393b',
   chains: [
-    localChain,
-    conduitChain,
-    arbitrumSepolia,
-    {
-      ...sepolia,
-      rpcUrls: {
-        default: {
-          http: ["https://sepolia.infura.io/v3/jBG4sMyhez7V13jNTeQKfVfgNa54nCmF"],
-        },
-      },
-    },
+    // localChain,
+    // conduitChain,
+    riseSepolia,
+    // arbitrumSepolia,
+    // {
+    //   ...sepolia,
+    //   rpcUrls: {
+    //     default: {
+    //       http: ["https://sepolia.infura.io/v3/jBG4sMyhez7V13jNTeQKfVfgNa54nCmF"],
+    //     },
+    //   },
+    // },
   ],
 });

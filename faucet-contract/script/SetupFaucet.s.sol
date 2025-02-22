@@ -24,7 +24,7 @@ contract SetupFaucetScript is Script {
         console.log("Previous Faucet Amount :", faucetAmount);
         console.log("Previous Faucet Cooldown :", faucetCooldown);
         
-        faucet.updateFaucetAmount(1e12);
+        faucet.updateFaucetAmount(1e18);
         faucet.updateFaucetCooldown(1);
         
         faucetAmount = faucet.faucetAmount();
