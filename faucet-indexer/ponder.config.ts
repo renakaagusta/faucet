@@ -27,10 +27,14 @@ export default createConfig({
       chainId: 11155111,
       transport: http(process.env.PONDER_RPC_URL_5),
     },
+    riseTestnet: {
+      chainId: 4623992,
+      transport: http(process.env.PONDER_RPC_URL_6),
+    },
   },
   contracts: {
     Faucet: {
-      network: "arbitrumSepolia",
+      network: "riseTestnet",
       abi: FaucetABI,
       address: process.env.FAUCET_ADDRESS as `0x${string}`,
       startBlock: process.env.FAUCET_BLOCK as unknown as number,
